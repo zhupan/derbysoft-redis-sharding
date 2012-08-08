@@ -42,8 +42,7 @@ use it as a maven dependency
 
 Invoke method(DateShardingRedis.init(redisHostsFile)) when start your application
 
-    - //redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
-
+    //redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
 
     DateShardingRedis.init(redisHostsFile)
 
@@ -61,14 +60,14 @@ To use it just:
         environment.properties
         redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 
-然后在web.xml文件里面添加一个Listener即可
+    然后在web.xml文件里面添加一个Listener即可
 
 
        <listener>
            <listener-class>com.derbysoft.redis.clients.common.listener.RedisHostsInitListener</listener-class>
        </listener>
 
-当然，如果你项目里面没有environment.properties文件而你又不想新建一个名为environment.properties的文件，也可以在web.xml指定properties文件名，不指定默认的properties文件是environment.properties
+    当然，如果你项目里面没有environment.properties文件而你又不想新建一个名为environment.properties的文件，也可以在web.xml指定properties文件名，不指定默认的properties文件是environment.properties
 
 
        <context-param>
@@ -88,6 +87,7 @@ To use it just:
            <url-pattern>/redis</url-pattern>
        </servlet-mapping>
 
+
 - 修改Redis Server个数
 
 
@@ -95,6 +95,7 @@ To use it just:
            <param-name>redisHostsSize</param-name>
            <param-value>32</param-value>
        </context-param>
+
 
 - 修改RedisPoolConfig配置
 
@@ -105,7 +106,8 @@ To use it just:
            <param-value>1,2,-1,-1,true,2000</param-value>
        </context-param>
 
-如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
+
+    如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
 
 
        <form method="post" action="redis">
