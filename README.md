@@ -41,7 +41,10 @@ use it as a maven dependency
     </dependency>
 
 Invoke method(DateShardingRedis.init(redisHostsFile)) when start your application
-    -//redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
+
+    - //redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
+
+
     DateShardingRedis.init(redisHostsFile)
 
 To use it just:
@@ -52,7 +55,7 @@ To use it just:
 
 ## Other supported
 
-Derbysoft-Redis-Sharding 提供了一个Listener，在应用启动的时候调用“DateShardingRedis.init(redisHostsFile)”，如果要用这个Listener有点特殊要求：默认情况下classes目录下要有一个environment.properties文件，在environment.properties文件中添加一个key为“redis.hosts.file”的条目
+- Derbysoft-Redis-Sharding 提供了一个Listener，在应用启动的时候调用“DateShardingRedis.init(redisHostsFile)”，如果要用这个Listener有点特殊要求：默认情况下classes目录下要有一个environment.properties文件，在environment.properties文件中添加一个key为“redis.hosts.file”的条目
 environment.properties
 redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 然后在web.xml文件里面添加一个Listener即可
@@ -66,7 +69,7 @@ redis.hosts.file = /usr/local/xxx/redis.hosts.properties
        <param-name>redisHostsConfig</param-name>
        <param-value>environment.properties</param-value>
    </context-param>
-另外，Derbysoft-Redis-Sharding提供了一个RedisHostsServlet来查看和修改redisHostsFile配置，GET请求是查看，POST请求是修改，在web.xml添加即可
+- 另外，Derbysoft-Redis-Sharding提供了一个RedisHostsServlet来查看和修改redisHostsFile配置，GET请求是查看，POST请求是修改，在web.xml添加即可
    <servlet>
        <servlet-name>RedisHostsServlet</servlet-name>
        <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisHostsServlet</servlet-class>
@@ -75,18 +78,19 @@ redis.hosts.file = /usr/local/xxx/redis.hosts.properties
        <servlet-name>RedisHostsServlet</servlet-name>
        <url-pattern>/redis</url-pattern>
    </servlet-mapping>
-修改Redis Server个数
+- 修改Redis Server个数
    <context-param>
        <param-name>redisHostsSize</param-name>
        <param-value>32</param-value>
    </context-param>
-修改RedisPoolConfig配置
+- 修改RedisPoolConfig配置
    <context-param>
        <param-name>redisPoolConfig</param-name>
        <--minIdle,maxIdle,maxActive,maxWait,testOnBorrow,timeout-->
        <param-value>1,2,-1,-1,true,2000</param-value>
    </context-param>
 如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
+
 
    <form method="post" action="redis">
        Hosts:
@@ -130,38 +134,40 @@ redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 ## Redis serve config file example
 
    ＃文件名：redis.hosts.properties
-   redis.host.000=10.200.107.10:6000
-   redis.host.001=10.200.107.10:6001
-   redis.host.002=10.200.107.10:6002
-   redis.host.003=10.200.107.10:6003
-   redis.host.004=10.200.107.10:6004
-   redis.host.005=10.200.107.10:6005
-   redis.host.006=10.200.107.10:6006
-   redis.host.007=10.200.107.10:6007
-   redis.host.008=10.200.107.10:6008
-   redis.host.009=10.200.107.10:6009
-   redis.host.010=10.200.107.10:6010
-   redis.host.011=10.200.107.10:6011
-   redis.host.012=10.200.107.10:6012
-   redis.host.013=10.200.107.10:6013
-   redis.host.014=10.200.107.10:6014
-   redis.host.015=10.200.107.10:6015
-   redis.host.016=10.200.107.10:6016
-   redis.host.017=10.200.107.10:6017
-   redis.host.018=10.200.107.10:6018
-   redis.host.019=10.200.107.10:6019
-   redis.host.020=10.200.107.10:6020
-   redis.host.021=10.200.107.10:6021
-   redis.host.022=10.200.107.10:6022
-   redis.host.023=10.200.107.10:6023
-   redis.host.024=10.200.107.10:6024
-   redis.host.025=10.200.107.10:6025
-   redis.host.026=10.200.107.10:6026
-   redis.host.027=10.200.107.10:6027
-   redis.host.028=10.200.107.10:6028
-   redis.host.029=10.200.107.10:6029
-   redis.host.030=10.200.107.10:6030
-   redis.host.031=10.200.107.10:6031
+
+
+       redis.host.000=10.200.107.10:6000
+       redis.host.001=10.200.107.10:6001
+       redis.host.002=10.200.107.10:6002
+       redis.host.003=10.200.107.10:6003
+       redis.host.004=10.200.107.10:6004
+       redis.host.005=10.200.107.10:6005
+       redis.host.006=10.200.107.10:6006
+       redis.host.007=10.200.107.10:6007
+       redis.host.008=10.200.107.10:6008
+       redis.host.009=10.200.107.10:6009
+       redis.host.010=10.200.107.10:6010
+       redis.host.011=10.200.107.10:6011
+       redis.host.012=10.200.107.10:6012
+       redis.host.013=10.200.107.10:6013
+       redis.host.014=10.200.107.10:6014
+       redis.host.015=10.200.107.10:6015
+       redis.host.016=10.200.107.10:6016
+       redis.host.017=10.200.107.10:6017
+       redis.host.018=10.200.107.10:6018
+       redis.host.019=10.200.107.10:6019
+       redis.host.020=10.200.107.10:6020
+       redis.host.021=10.200.107.10:6021
+       redis.host.022=10.200.107.10:6022
+       redis.host.023=10.200.107.10:6023
+       redis.host.024=10.200.107.10:6024
+       redis.host.025=10.200.107.10:6025
+       redis.host.026=10.200.107.10:6026
+       redis.host.027=10.200.107.10:6027
+       redis.host.028=10.200.107.10:6028
+       redis.host.029=10.200.107.10:6029
+       redis.host.030=10.200.107.10:6030
+       redis.host.031=10.200.107.10:6031
 
 ## License
 
