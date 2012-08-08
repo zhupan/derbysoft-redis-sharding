@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_9" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <listener>
+        <listener-class>com.derbysoft.redis.clients.common.listener.RedisHostsInitListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>redisHostsConfig</param-name>
+        <param-value>environment</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>redisPoolConfig</param-name>
+        <!--minIdle,maxIdle,maxActive,maxWait,testOnBorrow,timeout-->
+        <param-value>1,2,-1,-1,true,2000</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>redisHostsSize</param-name>
+        <param-value>32</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>RedisHostsServlet</servlet-name>
+        <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisHostsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RedisHostsServlet</servlet-name>
+        <url-pattern>/redis</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
+
+</web-app>
