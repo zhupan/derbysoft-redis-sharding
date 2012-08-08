@@ -52,6 +52,13 @@ To use it just:
     redis.set("foo2010-01-01", "bar");
     String value = redis.get("foo2010-01-01");
 
+If you do not need to sharding, You can use SingleJedis
+
+    RedisCommands redis = new  SingleJedis("10.200.107.35:6379");
+    redis.set("foo2010-01-01", "bar");
+    String value = redis.get("foo2010-01-01");
+
+
 ## Other supported
 
 - Derbysoft-Redis-Sharding 提供了一个Listener，在应用启动的时候调用“DateShardingRedis.init(redisHostsFile)”，如果要用这个Listener有点特殊要求：默认情况下classes目录下要有一个environment.properties文件，在environment.properties文件中添加一个key为“redis.hosts.file”的条目
