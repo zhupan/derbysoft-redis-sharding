@@ -111,7 +111,7 @@ To use it just:
 
     如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
 
-       ``
+       <code>
        <form method="post" action="redis">
            Hosts:
            <textarea name="hosts" rows="50" cols="30">
@@ -150,7 +150,7 @@ To use it just:
            </textarea>
            <input type="submit" value="Update"/>
        </form>
-       ``
+       <code>
 
 ## Redis serve config file example
 
@@ -192,7 +192,7 @@ To use it just:
 
 ## License
 
-Copyright (c) 2011 Jonathan Leibiusky
+Copyright (c) 2012
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
