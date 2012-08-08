@@ -17,7 +17,7 @@ object HostsPropertiesValidate {
         throw new IllegalArgumentException(error + "Host key[" + m._1 + "] is illegal.")
       }
       val hostNumber = m._1.substring(HostKey.hostPrefix.length).toInt
-      if (0 > hostNumber || hostNumber > 31) {
+      if (0 > hostNumber || hostNumber > HostKey.redisHostsSize - 1) {
         throw new IllegalArgumentException(error + "Host key[" + m._1 + "] is illegal.")
       }
       val hostAndPort = m._2.split(":")
