@@ -63,12 +63,14 @@ To use it just:
     然后在web.xml文件里面添加一个Listener即可
 
 
+
        <listener>
            <listener-class>com.derbysoft.redis.clients.common.listener.RedisHostsInitListener</listener-class>
        </listener>
 
 
     当然，如果你项目里面没有environment.properties文件而你又不想新建一个名为environment.properties的文件，也可以在web.xml指定properties文件名，不指定默认的properties文件是environment.properties
+
 
 
        <context-param>
@@ -78,6 +80,7 @@ To use it just:
 
 
 - 另外，Derbysoft-Redis-Sharding提供了一个RedisHostsServlet来查看和修改redisHostsFile配置，GET请求是查看，POST请求是修改，在web.xml添加即可
+
 
 
        <servlet>
