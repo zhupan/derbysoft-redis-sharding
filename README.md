@@ -62,22 +62,24 @@ To use it just:
 
     然后在web.xml文件里面添加一个Listener即可
 
-
+       ``
        <listener>
            <listener-class>com.derbysoft.redis.clients.common.listener.RedisHostsInitListener</listener-class>
        </listener>
+       ``
 
     当然，如果你项目里面没有environment.properties文件而你又不想新建一个名为environment.properties的文件，也可以在web.xml指定properties文件名，不指定默认的properties文件是environment.properties
 
-
+       ``
        <context-param>
            <param-name>redisHostsConfig</param-name>
            <param-value>environment.properties</param-value>
        </context-param>
+       ``
 
 - 另外，Derbysoft-Redis-Sharding提供了一个RedisHostsServlet来查看和修改redisHostsFile配置，GET请求是查看，POST请求是修改，在web.xml添加即可
 
-
+       ``
        <servlet>
            <servlet-name>RedisHostsServlet</servlet-name>
            <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisHostsServlet</servlet-class>
@@ -86,30 +88,30 @@ To use it just:
            <servlet-name>RedisHostsServlet</servlet-name>
            <url-pattern>/redis</url-pattern>
        </servlet-mapping>
-
+       ``
 
 - 修改Redis Server个数
 
-
+       ``
        <context-param>
            <param-name>redisHostsSize</param-name>
            <param-value>32</param-value>
        </context-param>
-
+       ``
 
 - 修改RedisPoolConfig配置
 
-
+       ``
        <context-param>
            <param-name>redisPoolConfig</param-name>
            <--minIdle,maxIdle,maxActive,maxWait,testOnBorrow,timeout-->
            <param-value>1,2,-1,-1,true,2000</param-value>
        </context-param>
-
+       ``
 
     如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
 
-
+       ``
        <form method="post" action="redis">
            Hosts:
            <textarea name="hosts" rows="50" cols="30">
@@ -148,6 +150,7 @@ To use it just:
            </textarea>
            <input type="submit" value="Update"/>
        </form>
+       ``
 
 ## Redis serve config file example
 
