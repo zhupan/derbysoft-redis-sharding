@@ -30,19 +30,18 @@ All of the following redis features are supported:
 
 ## How do I use it?
 
-You can download the latest build at: 
-    http://github.com/xetorthio/jedis/downloads
+use it as a maven dependency
 
-Or use it as a maven dependency:
-
- <dependency>
-     <groupId>com.derbysoft.redis</groupId>
-     <artifactId>derbysoft-redis-sharding</artifactId>
-     <version>1.3</version>
- </dependency>
+    <dependency>
+        <groupId>com.derbysoft.redis</groupId>
+        <artifactId>derbysoft-redis-sharding</artifactId>
+        <version>1.3</version>
+        <type>jar</type>
+        <scope>compile</scope>
+    </dependency>
 
 Invoke method(DateShardingRedis.init(redisHostsFile)) when start your application
-    //redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
+    -//redisHostsFile = "/usr/local/xxx/redis.hosts.properties"
     DateShardingRedis.init(redisHostsFile)
 
 To use it just:
@@ -54,7 +53,7 @@ To use it just:
 ## Other supported
 
 Derbysoft-Redis-Sharding 提供了一个Listener，在应用启动的时候调用“DateShardingRedis.init(redisHostsFile)”，如果要用这个Listener有点特殊要求：默认情况下classes目录下要有一个environment.properties文件，在environment.properties文件中添加一个key为“redis.hosts.file”的条目
-#environment.properties
+environment.properties
 redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 然后在web.xml文件里面添加一个Listener即可
 
