@@ -111,46 +111,48 @@ To use it just:
 
     如果用这个servlet修改hosts配置，htm文件如下，需要一个name＝“hosts”的文本域，post提交：
 
-       <code>
-       <form method="post" action="redis">
-           Hosts:
-           <textarea name="hosts" rows="50" cols="30">
-               redis.host.000=localhost:6379
-               redis.host.001=localhost:6380
-               redis.host.002=localhost:6381
-               redis.host.003=localhost:6382
-               redis.host.004=localhost:6383
-               redis.host.005=localhost:6384
-               redis.host.006=localhost:6384
-               redis.host.007=localhost:6384
-               redis.host.008=localhost:6384
-               redis.host.009=localhost:6384
-               redis.host.010=localhost:6384
-               redis.host.011=localhost:6384
-               redis.host.012=localhost:6384
-               redis.host.013=localhost:6384
-               redis.host.014=localhost:6384
-               redis.host.015=localhost:6384
-               redis.host.016=localhost:6384
-               redis.host.017=localhost:6384
-               redis.host.018=localhost:6384
-               redis.host.019=localhost:6384
-               redis.host.020=localhost:6384
-               redis.host.021=localhost:6384
-               redis.host.022=localhost:6384
-               redis.host.023=localhost:6384
-               redis.host.024=localhost:6384
-               redis.host.025=localhost:6384
-               redis.host.026=localhost:6384
-               redis.host.027=localhost:6384
-               redis.host.028=localhost:6384
-               redis.host.029=localhost:6384
-               redis.host.030=localhost:6384
-               redis.host.031=localhost:6384
-           </textarea>
-           <input type="submit" value="Update"/>
-       </form>
-       <code>
+
+
+         <form method="post" action="redis">
+             Hosts:
+             <textarea name="hosts" rows="50" cols="30">
+                 redis.host.000=localhost:6379
+                 redis.host.001=localhost:6380
+                 redis.host.002=localhost:6381
+                 redis.host.003=localhost:6382
+                 redis.host.004=localhost:6383
+                 redis.host.005=localhost:6384
+                 redis.host.006=localhost:6384
+                 redis.host.007=localhost:6384
+                 redis.host.008=localhost:6384
+                 redis.host.009=localhost:6384
+                 redis.host.010=localhost:6384
+                 redis.host.011=localhost:6384
+                 redis.host.012=localhost:6384
+                 redis.host.013=localhost:6384
+                 redis.host.014=localhost:6384
+                 redis.host.015=localhost:6384
+                 redis.host.016=localhost:6384
+                 redis.host.017=localhost:6384
+                 redis.host.018=localhost:6384
+                 redis.host.019=localhost:6384
+                 redis.host.020=localhost:6384
+                 redis.host.021=localhost:6384
+                 redis.host.022=localhost:6384
+                 redis.host.023=localhost:6384
+                 redis.host.024=localhost:6384
+                 redis.host.025=localhost:6384
+                 redis.host.026=localhost:6384
+                 redis.host.027=localhost:6384
+                 redis.host.028=localhost:6384
+                 redis.host.029=localhost:6384
+                 redis.host.030=localhost:6384
+                 redis.host.031=localhost:6384
+             </textarea>
+             <input type="submit" value="Update"/>
+         </form>
+
+
 
 ## Redis serve config file example
 
