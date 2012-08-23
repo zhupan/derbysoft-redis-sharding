@@ -4,7 +4,7 @@ Derbysoft-Redis-Sharding 是基于Scala语言封装的Redis客户端，可以用
 
 ## Derbysoft-Redis-Sharding Particularity
 默认要配置32个Redis Server，同时提供了修改Redis Server个数的功能
-Redis Server的配置文件格式是Properties,其中Properties文件中Key的前缀必须是“redis.host.”，Ke的值从“redis.host.000”到“redis.host.127”，Value的值格式如下：“10.200.107.10:6379”，完整配置格式见下面：“Redis Serve Config File example”
+Redis Server的配置文件格式是Properties,其中Properties文件中Key的前缀必须是“redis.host.”，Ke的值从“redis.host.000”到“redis.host.31”，Value的值格式如下：“10.200.107.10:6379”，完整配置格式见下面：“Redis Serve Config File example”
 支持strings, hashes, lists, sets and sorted sets等结构
 
 ## What can I do with Derbysoft-Redis-Sharding ?
