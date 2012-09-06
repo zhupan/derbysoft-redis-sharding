@@ -187,7 +187,11 @@ class HashShardingRedis extends RedisCommands {
 
   override def pipelined(shardedJedisPipeline: ShardedJedisPipeline): java.util.List[Object] = {
     ShardedJedisClientPool.withClient {
-      client => return client.pipelined(shardedJedisPipeline)
+      client =>{
+        val pipelined = client.pipelined()
+        pipelined.sync()
+        return pipelined.getResults
+      }
     }
   }
 

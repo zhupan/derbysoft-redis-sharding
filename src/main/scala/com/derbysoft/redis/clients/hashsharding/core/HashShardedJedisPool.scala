@@ -1,6 +1,6 @@
 package com.derbysoft.redis.clients.hashsharding.core
 
-import redis.clients.jedis.{JedisShardInfo, ShardedJedisPool}
+import redis.clients.jedis.JedisShardInfo
 import com.derbysoft.redis.clients.ShardingRedis
 import com.derbysoft.redis.clients.normal.JedisPoolConfigInstance
 import com.derbysoft.redis.clients.common.config.HostKey

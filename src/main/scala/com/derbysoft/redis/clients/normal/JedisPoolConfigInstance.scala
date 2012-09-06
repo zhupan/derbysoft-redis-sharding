@@ -3,7 +3,7 @@ package com.derbysoft.redis.clients.normal
 object JedisPoolConfig {
 
   var minIdle = 1
-  var maxIdle = 2
+  var maxIdle = 200
   var maxActive = -1
   var maxWait = -1l
   var timeout = 60000
