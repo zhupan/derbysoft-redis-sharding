@@ -37,6 +37,7 @@ object JedisPoolConfigInstance {
     poolConfig.setMaxIdle(JedisPoolConfig.maxIdle)
     poolConfig.setMaxWait(JedisPoolConfig.maxWait)
     poolConfig.setTestOnBorrow(JedisPoolConfig.testOnBorrow)
+    poolConfig.setMinEvictableIdleTimeMillis(10 * 60 * 1000)
     poolConfig
   }
 

@@ -2,16 +2,16 @@ package com.derbysoft.redis.clients.hashsharding.core
 
 import java.util.List
 import java.util.regex.Pattern
-import scala.actors._, Actor._
-
+import scala.collection.JavaConversions._
 
 import org.apache.commons.pool.impl.GenericObjectPool
 
 import redis.clients.util.Hashing
 import redis.clients.util.Pool
-import redis.clients.jedis.{Jedis, ShardedJedis, JedisShardInfo}
+import redis.clients.jedis.{ShardedJedis, JedisShardInfo}
 import org.apache.commons.pool.{PoolableObjectFactory, BasePoolableObjectFactory}
-import collection.mutable.ListBuffer
+import java.util.concurrent.Callable
+import com.derbysoft.redis.util.ExecutorUtils
 
 class ShardedJedisPool(poolConfig: GenericObjectPool.Config, factory: PoolableObjectFactory[JedisShardInfo]) extends Pool[ShardedJedis](poolConfig, factory) {
 
@@ -40,64 +40,35 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
   override def destroyObject(obj: T) {
     if ((obj != null) && (obj.isInstanceOf[ShardedJedis])) {
       val shardedJedis = obj.asInstanceOf[ShardedJedis]
-      val redisActor = actor {
-        receiveWithin(10) {
-          case jedis: Jedis => {
+      val list = new java.util.ArrayList[Callable[Unit]]
+      for (jedis <- shardedJedis.getAllShards) {
+        list.add(new Callable[Unit] {
+          def call() = {
             jedis.quit()
             jedis.disconnect()
           }
-        }
+        })
       }
-      val all = shardedJedis.getAllShards.iterator()
-      while (all.hasNext) {
-        redisActor ! all.next()
-      }
+      ExecutorUtils.batchExecute(list)
     }
   }
 
   override def validateObject(obj: T): Boolean = {
-    try {
-      val shardedJedis = obj.asInstanceOf[ShardedJedis]
-      val result = new ListBuffer[Boolean]
-      val redisActor = actor {
-        receiveWithin(20) {
-          case jedis: Jedis => {
-            jedis.ping() match {
-              case value => {
-                if (!"PONG".equals(value)) {
-                  result += false
-                } else {
-                  result += true
-                }
-              }
-            }
-          }
-          case _ => result += false
+    val shardedJedis = obj.asInstanceOf[ShardedJedis]
+    val list = new java.util.ArrayList[Callable[Boolean]]
+    for (redis <- shardedJedis.getAllShards) {
+      list.add(new Callable[Boolean] {
+        def call(): Boolean = {
+          return "PONG".equals(redis.ping())
         }
-      }
-      val all = shardedJedis.getAllShards.iterator()
-      while (all.hasNext) {
-        redisActor ! all.next()
-      }
-      while (true) {
-        if (result.contains(false)) {
-          return false
-        }
-        if (shardedJedis.getAllShards.size == result.size) {
-          if (result.contains(false)) {
-            return false
-          }
-          return true
-        }
-        Thread.sleep(1)
-      }
-      return false
-    } catch {
-      case e: Exception => {
-        println(e.getMessage)
-        return false
-      }
+      })
     }
+    val result = ExecutorUtils.batchExecute(list)
+    if (result.contains(false)) {
+      return false
+    }
+    true
   }
+
 
 }
