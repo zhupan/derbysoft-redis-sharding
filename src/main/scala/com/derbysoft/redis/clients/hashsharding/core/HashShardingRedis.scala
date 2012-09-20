@@ -32,7 +32,7 @@ class HashShardingRedis extends RedisCommands {
   override def delete(key: String) = {
     ShardedJedisClientPool.withClient {
       client => {
-        client.expireAt(key, 0)
+        client.expire(key, 0)
       }
     }
   }

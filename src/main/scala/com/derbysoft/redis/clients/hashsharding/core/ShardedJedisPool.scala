@@ -63,11 +63,7 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
         }
       })
     }
-    val result = ExecutorUtils.batchExecute(list)
-    if (result.contains(false)) {
-      return false
-    }
-    true
+    !ExecutorUtils.batchExecute(list).contains(false)
   }
 
 

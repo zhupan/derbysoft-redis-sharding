@@ -35,7 +35,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
   override def delete(key: String) = {
     pool.withClient {
       client => {
-        client.expireAt(key, 0)
+        client.expire(key, 0)
       }
     }
   }
