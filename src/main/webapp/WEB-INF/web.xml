@@ -33,6 +33,16 @@
         <url-pattern>/redis</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RedisMemoryServlet</servlet-name>
+        <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisMemoryServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RedisMemoryServlet</servlet-name>
+        <url-pattern>/redis-memory</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>20</session-timeout>
     </session-config>

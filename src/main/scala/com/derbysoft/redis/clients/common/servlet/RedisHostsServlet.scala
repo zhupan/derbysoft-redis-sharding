@@ -7,14 +7,14 @@ class RedisHostsServlet extends HttpServlet {
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
     println("RedisHostsServlet get")
-    response.getOutputStream().println(ShardingRedis.hosts);
-    response.setStatus(HttpServletResponse.SC_OK);
+    response.getOutputStream().println(ShardingRedis.hosts)
+    response.setStatus(HttpServletResponse.SC_OK)
   }
 
   override def doPost(request: HttpServletRequest, response: HttpServletResponse) {
-    val hosts = request.getParameter("hosts");
-    response.getOutputStream().println(ShardingRedis.updateHosts(hosts));
-    response.setStatus(HttpServletResponse.SC_OK);
+    val hosts = request.getParameter("hosts")
+    response.getOutputStream().println(ShardingRedis.updateHosts(hosts))
+    response.setStatus(HttpServletResponse.SC_OK)
   }
 
 }
