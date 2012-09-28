@@ -12,7 +12,7 @@
         <profile>
             <id>dev</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <!--<activeByDefault>true</activeByDefault>-->
             </activation>
             <properties>
                 <env>dev</env>

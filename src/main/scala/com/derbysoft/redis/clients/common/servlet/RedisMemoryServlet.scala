@@ -7,7 +7,7 @@ import com.derbysoft.redis.util.RedisInfoUtil
 
 class RedisMemoryServlet extends HttpServlet {
 
-  val kilo = 1024
+  val kilo = 1024d
 
   //(bit).Byte (B).KiloByte (KB).MegaByte (MB).GigaByte (GB).TeraByte (TB).PetaByte (PB).ExaByte (EB).ZetaByte (ZB).YottaByte (YB).NonaByte (NB).DoggaByte (DB)
   var units = List("B", "K", "M", "G", "T", "P", "E", "Z", "Y", "N", "D")
@@ -21,13 +21,13 @@ class RedisMemoryServlet extends HttpServlet {
       response.getOutputStream().println(jedis.info())
       return
     }
-    var totalMemory = ShardingRedis.single.usedMemory()
+    var totalMemory: Double = ShardingRedis.single.usedMemory()
     var index = 0
     while (totalMemory > kilo && index < units.size - 1) {
       index += 1
       totalMemory /= kilo
     }
-    response.getOutputStream().println("<div>Total Used Memory: " + totalMemory + " " + units(index) + "</div>")
+    response.getOutputStream().println("<div>Total Used Memory: " + totalMemory + units(index) + "</div>")
     ShardingRedis.hostsMap.foreach((h: (String, String)) => {
       printAllHosts(response, request, h)
     })
@@ -40,12 +40,17 @@ class RedisMemoryServlet extends HttpServlet {
 
   def getJedis(host: String): Jedis = {
     val shardedJedis = ShardingRedis.single.getResource.asInstanceOf[ShardedJedis]
-    val iterator = shardedJedis.getAllShards.iterator()
-    while (iterator.hasNext) {
-      val jedis = iterator.next()
-      if (getHost(jedis).equals(host)) {
-        return jedis
+    try {
+      val iterator = shardedJedis.getAllShards.iterator()
+      while (iterator.hasNext) {
+        val jedis = iterator.next()
+        if (getHost(jedis).equals(host)) {
+          return jedis
+        }
       }
+    }
+    finally {
+      ShardingRedis.single.returnResource(shardedJedis)
     }
     null
   }
