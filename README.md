@@ -90,6 +90,17 @@ If you do not need to sharding, You can use SingleJedis
                <url-pattern>/redis</url-pattern>
            </servlet-mapping>
 
+- 查看各个Redis Server的内存使用情况
+
+           <servlet>
+               <servlet-name>RedisMemoryServlet</servlet-name>
+               <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisMemoryServlet</servlet-class>
+           </servlet>
+           <servlet-mapping>
+               <servlet-name>RedisMemoryServlet</servlet-name>
+               <url-pattern>/redis-memory</url-pattern>
+           </servlet-mapping>
+
 - Update Redis Server Count
 
            <context-param>

@@ -4,6 +4,8 @@ import javax.servlet.http.{HttpServletRequest, HttpServlet, HttpServletResponse}
 import com.derbysoft.redis.clients.ShardingRedis
 import redis.clients.jedis.{Jedis, ShardedJedis}
 import com.derbysoft.redis.util.RedisInfoUtil
+import scala.BigDecimal
+import math.BigDecimal.RoundingMode
 
 class RedisMemoryServlet extends HttpServlet {
 
@@ -27,7 +29,7 @@ class RedisMemoryServlet extends HttpServlet {
       index += 1
       totalMemory /= kilo
     }
-    response.getOutputStream().println("<div>Total Used Memory: " + totalMemory + units(index) + "</div>")
+    response.getOutputStream().println("<div>Total Used Memory: " + BigDecimal.valueOf(totalMemory).setScale(3, RoundingMode.HALF_UP) + units(index) + "</div>")
     ShardingRedis.hostsMap.foreach((h: (String, String)) => {
       printAllHosts(response, request, h)
     })
