@@ -1,8 +1,6 @@
 package com.derbysoft.redis.util
 
-import java.util.ArrayList
-import java.util.Collection
-import java.util.List
+import java.util.{Date, ArrayList, Collection, List}
 import java.util.concurrent._
 import scala.collection.JavaConversions._
 import com.derbysoft.redis.clients.common.config.HostKey
@@ -11,7 +9,7 @@ object ExecutorUtils {
 
   var executor: Executor = new ThreadPoolExecutor(HostKey.redisHostsSize * 2, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable]())
 
-  def setExecutor(executor: Executor) = {
+  def setExecutor(executor: Executor) {
     this.executor = executor
   }
 
@@ -28,7 +26,8 @@ object ExecutorUtils {
         results.add(future.get())
       } catch {
         case e: Exception => {
-          println(e.getMessage)
+          println(new Date() + ":" + e.getStackTrace)
+          throw new RuntimeException(e)
         }
       }
     }

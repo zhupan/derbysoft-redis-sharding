@@ -43,9 +43,8 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
       val list = new java.util.ArrayList[Callable[Unit]]
       for (jedis <- shardedJedis.getAllShards) {
         list.add(new Callable[Unit] {
-          def call() = {
+          def call() {
             jedis.quit()
-            jedis.disconnect()
           }
         })
       }
@@ -59,12 +58,11 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
     for (redis <- shardedJedis.getAllShards) {
       list.add(new Callable[Boolean] {
         def call(): Boolean = {
-          return "PONG".equals(redis.ping())
+          "PONG".equalsIgnoreCase(redis.ping())
         }
       })
     }
     !ExecutorUtils.batchExecute(list).contains(false)
   }
-
 
 }

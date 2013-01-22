@@ -8,7 +8,7 @@ object PropertiesToMap {
   def apply(fileName: String): Map[String, String] = {
     val properties = new Properties()
     properties.load(new FileInputStream(fileName))
-    properties.list(System.out);
+    properties.list(System.out)
     propertiesToMap(properties)
   }
 

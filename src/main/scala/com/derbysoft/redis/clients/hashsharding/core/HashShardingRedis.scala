@@ -13,7 +13,7 @@ class HashShardingRedis extends RedisCommands {
     ShardedJedisClientPool.getResource
   }
 
-  override def returnResource(jedisCommands: JedisCommands) = {
+  override def returnResource(jedisCommands: JedisCommands) {
     ShardedJedisClientPool.returnResource(jedisCommands.asInstanceOf[ShardedJedis])
   }
 
@@ -29,7 +29,7 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  override def delete(key: String) = {
+  override def delete(key: String) {
     ShardedJedisClientPool.withClient {
       client => {
         client.expire(key, 0)
@@ -37,7 +37,7 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  override def set(key: String, value: String, unixTime: Long) = {
+  override def set(key: String, value: String, unixTime: Long) {
     ShardedJedisClientPool.withClient {
       client => {
         client.set(key, value)
@@ -64,7 +64,7 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  override def hmset(key: String, map: java.util.Map[String, String], unixTime: Long) = {
+  override def hmset(key: String, map: java.util.Map[String, String], unixTime: Long) {
     ShardedJedisClientPool.withClient {
       client => {
         client.hmset(key, map)
@@ -73,7 +73,7 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  override def hset(key: String, field: String, value: String, unixTime: Long) = {
+  override def hset(key: String, field: String, value: String, unixTime: Long) {
     ShardedJedisClientPool.withClient {
       client => {
         client.hset(key, field, value)
@@ -127,11 +127,11 @@ class HashShardingRedis extends RedisCommands {
   override def keys(pattern: String): java.util.Set[String] = {
     ShardedJedisClientPool.withClient {
       client => {
-        val keys = new java.util.HashSet[String];
+        val keys = new java.util.HashSet[String]
         val iterator = client.getAllShards.iterator()
         while (iterator.hasNext) {
           val jedis = iterator.next()
-          keys.addAll(jedis.keys(pattern));
+          keys.addAll(jedis.keys(pattern))
         }
         return keys
       }
@@ -161,12 +161,12 @@ class HashShardingRedis extends RedisCommands {
         }
       }
     }
-    return infos
+    infos
   }
 
   override def usedMemory(): Long = {
     var totalMemory = 0L
-    val iterator = infos.iterator()
+    val iterator = infos().iterator()
     while (iterator.hasNext) {
       totalMemory += RedisInfoUtil.getUsedMemory(iterator.next())
     }
@@ -187,10 +187,10 @@ class HashShardingRedis extends RedisCommands {
 
   override def pipelined(shardedJedisPipeline: ShardedJedisPipeline): java.util.List[Object] = {
     ShardedJedisClientPool.withClient {
-      client =>{
-        val pipelined = client.pipelined()
-        pipelined.sync()
-        return pipelined.getResults
+      client => {
+        shardedJedisPipeline.setShardedJedis(client)
+        shardedJedisPipeline.execute()
+        return shardedJedisPipeline.getResults
       }
     }
   }

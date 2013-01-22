@@ -7,6 +7,7 @@ import com.derbysoft.redis.clients.RedisCommands
 import scala.{Double, Int, Long}
 import java.lang.{String, Object}
 import redis.clients.util.Slowlog
+import scala.collection.JavaConversions._
 
 class SingleJedis(hostAndPort: String) extends RedisCommands {
 
@@ -16,7 +17,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     pool.getResource
   }
 
-  override def returnResource(jedisCommands: JedisCommands) = {
+  override def returnResource(jedisCommands: JedisCommands) {
     pool.returnResource(jedisCommands.asInstanceOf[Jedis])
   }
 
@@ -32,7 +33,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     }
   }
 
-  override def delete(key: String) = {
+  override def delete(key: String) {
     pool.withClient {
       client => {
         client.expire(key, 0)
@@ -40,7 +41,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     }
   }
 
-  override def set(key: String, value: String, unixTime: Long) = {
+  override def set(key: String, value: String, unixTime: Long) {
     pool.withClient {
       client => {
         client.set(key, value)
@@ -67,7 +68,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     }
   }
 
-  override def hmset(key: String, map: java.util.Map[String, String], unixTime: Long) = {
+  override def hmset(key: String, map: java.util.Map[String, String], unixTime: Long) {
     pool.withClient {
       client => {
         client.hmset(key, map)
@@ -77,7 +78,7 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
   }
 
 
-  override def hset(key: String, field: String, value: String, unixTime: Long) = {
+  override def hset(key: String, field: String, value: String, unixTime: Long) {
     pool.withClient {
       client => {
         client.hset(key, field, value)
@@ -111,6 +112,12 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
   }
 
   def del(keys: String*): Long = {
+    pool.withClient {
+      client => return client.del(keys: _*)
+    }
+  }
+
+  def del(keys: java.util.List[String]): Long = {
     pool.withClient {
       client => return client.del(keys: _*)
     }

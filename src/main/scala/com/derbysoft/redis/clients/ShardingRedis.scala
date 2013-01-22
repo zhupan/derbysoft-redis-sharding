@@ -2,7 +2,8 @@ package com.derbysoft.redis.clients
 
 import com.derbysoft.redis.util.{RichFile, MapToProperties, PropertiesToMap}
 import common.config.HostsPropertiesValidate
-import hashsharding.core.{HashShardedJedisPool, HashShardingRedis}
+import hashsharding.core.{ShardedJedisClientPool, HashShardingRedis}
+import scala.collection.JavaConversions._
 
 object ShardingRedis {
 
@@ -28,7 +29,7 @@ object ShardingRedis {
       hostsMap.clear()
       hostsMap.++=(map.toList)
       RichFile.writeStringToFile(hosts, hostsFile)
-      HashShardedJedisPool.initShards()
+      ShardedJedisClientPool.rePool()
     } catch {
       case e: Exception => {
         println(e.getMessage)

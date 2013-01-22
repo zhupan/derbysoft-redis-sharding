@@ -15,6 +15,7 @@ class RedisMemoryServlet extends HttpServlet {
   var units = List("B", "K", "M", "G", "T", "P", "E", "Z", "Y", "N", "D")
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
+    response.setContentType("text/html;charset=UTF-8")
     response.setStatus(HttpServletResponse.SC_OK)
     val host = request.getParameter("host")
     if (host != null && !host.equals("")) {

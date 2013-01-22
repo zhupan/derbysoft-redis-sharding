@@ -2,7 +2,6 @@ package com.derbysoft.redis.clients.normal
 
 import redis.clients.jedis.JedisPool
 
-
 object JedisPoolInstance {
 
   def apply(hostAndPortValue: String): JedisPool = {

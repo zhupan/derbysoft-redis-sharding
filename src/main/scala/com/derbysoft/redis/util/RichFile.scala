@@ -13,7 +13,7 @@ class RichFile(fileName: String) {
       out.print(data)
     }
     finally {
-      out.close
+      out.close()
     }
   }
 }
@@ -22,7 +22,7 @@ object RichFile {
 
   implicit def enrichFile(file: String) = new RichFile(file)
 
-  def writeStringToFile(value: String, fileName: String) = {
+  def writeStringToFile(value: String, fileName: String) {
     val file = new RichFile(fileName)
     file.text = value
   }

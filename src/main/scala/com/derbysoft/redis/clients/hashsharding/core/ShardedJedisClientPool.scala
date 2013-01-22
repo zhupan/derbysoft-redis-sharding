@@ -2,18 +2,33 @@ package com.derbysoft.redis.clients.hashsharding.core
 
 import redis.clients.jedis.ShardedJedis
 
-protected object ShardedJedisClientPool extends ShardedJedisClientPool
+object ShardedJedisClientPool extends ShardedJedisClientPool
 
 protected class ShardedJedisClientPool {
 
-  val pool = HashShardedJedisPool()
+  var pool = HashShardedJedisPool()
+
+  def rePool() {
+    HashShardedJedisPool.initShards()
+    pool = HashShardedJedisPool()
+  }
 
   def withClient[T](body: ShardedJedis => T) = {
-    val client = pool.getResource
+    var jedis: ShardedJedis = null
     try {
-      body(client)
+      jedis = pool.getResource
+      body(jedis)
+    } catch {
+      case e: Exception => {
+        if (jedis != null) {
+          pool.returnBrokenResource(jedis)
+        }
+        throw new RuntimeException(e)
+      }
     } finally {
-      pool.returnResource(client)
+      if (jedis != null) {
+        pool.returnResource(jedis)
+      }
     }
   }
 
@@ -21,7 +36,7 @@ protected class ShardedJedisClientPool {
     pool.getResource
   }
 
-  def returnResource(jedis: ShardedJedis) = {
+  def returnResource(jedis: ShardedJedis) {
     pool.returnResource(jedis)
   }
 

@@ -1,10 +1,11 @@
 package com.derbysoft.redis.clients.common.config
 
 import java.util.regex.Pattern
+import scala.collection.JavaConversions._
 
 object HostsPropertiesValidate {
 
-  def apply(hostMap: Map[String, String]) {
+  def apply(hostMap: java.util.Map[String, String]) {
     val error = "Error: "
     if (hostMap.size != HostKey.redisHostsSize) {
       throw new IllegalArgumentException(error + "Host size[" + hostMap.size + "] is illegal.")

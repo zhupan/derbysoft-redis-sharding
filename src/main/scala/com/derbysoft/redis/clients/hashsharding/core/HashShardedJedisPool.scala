@@ -15,8 +15,10 @@ object HashShardedJedisPool {
 
   def initShards() {
     shards.clear()
+    println("shards size:" + ShardingRedis.hostsMap.size)
     ShardingRedis.hostsMap.foreach((h: (String, String)) => {
       shards.add(JedisShardInfoInstance(h._2))
+      println(h._1)
     })
     if (shards.size() != HostKey.redisHostsSize) {
       throw new IllegalArgumentException("Redis hosts size[" + shards.size + "] is illegal.")
