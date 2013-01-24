@@ -4,6 +4,7 @@ import com.derbysoft.redis.util.{RichFile, MapToProperties, PropertiesToMap}
 import common.config.HostsPropertiesValidate
 import hashsharding.core.{ShardedJedisClientPool, HashShardingRedis}
 import scala.collection.JavaConversions._
+import org.apache.commons.logging.LogFactory
 
 object ShardingRedis {
 
@@ -12,6 +13,8 @@ object ShardingRedis {
   val single = new HashShardingRedis
 
   private var hostsFile = ""
+
+  private val logger = LogFactory.getLog(this.getClass)
 
   def init(hostsFile: String): String = {
     this.hostsFile = hostsFile
@@ -32,7 +35,7 @@ object ShardingRedis {
       ShardedJedisClientPool.rePool()
     } catch {
       case e: Exception => {
-        println(e.getMessage)
+        logger.error(e.getMessage, e)
         return e.getMessage
       }
     }
