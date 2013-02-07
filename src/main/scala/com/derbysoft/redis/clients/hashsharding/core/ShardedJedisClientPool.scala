@@ -22,6 +22,7 @@ protected class ShardedJedisClientPool {
       case e: Exception => {
         if (jedis != null) {
           pool.returnBrokenResource(jedis)
+          jedis = null
         }
         throw new RuntimeException(e)
       }

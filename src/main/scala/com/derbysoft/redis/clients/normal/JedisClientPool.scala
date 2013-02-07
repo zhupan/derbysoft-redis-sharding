@@ -16,12 +16,13 @@ class JedisClientPool(hostAndPortValue: String) {
       case e: Exception => {
         if (jedis != null) {
           pool.returnBrokenResource(jedis.asInstanceOf[BinaryJedis])
+          jedis = null
         }
         throw new RuntimeException(e)
       }
     }
     finally {
-      if (jedis != null) {
+      if (jedis != null && jedis.isConnected) {
         pool.returnResource(jedis.asInstanceOf[BinaryJedis])
       }
     }

@@ -5,6 +5,7 @@ import java.util.ResourceBundle
 import javax.servlet.ServletContextEvent
 import com.derbysoft.redis.clients.normal.JedisPoolConfig
 import com.derbysoft.redis.clients.common.config.HostKey
+import com.derbysoft.redis.clients.hashsharding.core.ShardedJedisClientPool
 
 protected object RedisInit {
 
@@ -37,6 +38,7 @@ protected object RedisInit {
       val testOnBorrow = java.lang.Boolean.valueOf(redisPoolConfigs(4))
       val timeout = Integer.valueOf(redisPoolConfigs(5))
       JedisPoolConfig.init(minIdle, maxIdle, maxActive, maxWait, testOnBorrow, timeout)
+      ShardedJedisClientPool.rePool()
     }
   }
 

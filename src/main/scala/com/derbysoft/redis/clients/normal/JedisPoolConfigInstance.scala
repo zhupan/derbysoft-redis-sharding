@@ -1,5 +1,6 @@
 package com.derbysoft.redis.clients.normal
 
+
 object JedisPoolConfig {
 
   var minIdle = 1
