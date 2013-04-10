@@ -8,10 +8,20 @@ class JedisClientPool(hostAndPortValue: String) {
   val pool = JedisPoolInstance(hostAndPortValue)
 
   def withClient[T](body: Jedis => T) = {
+    val jedis = pool.getResource
+    try {
+      body(jedis)
+    } finally {
+      if (jedis != null && jedis.isConnected) {
+        pool.returnResource(jedis.asInstanceOf[BinaryJedis])
+      }
+    }
+  }
+
+  def getResource: Jedis = {
     var jedis: Jedis = null
     try {
       jedis = pool.getResource
-      body(jedis)
     } catch {
       case e: Exception => {
         if (jedis != null) {
@@ -21,15 +31,7 @@ class JedisClientPool(hostAndPortValue: String) {
         throw new RuntimeException(e)
       }
     }
-    finally {
-      if (jedis != null && jedis.isConnected) {
-        pool.returnResource(jedis.asInstanceOf[BinaryJedis])
-      }
-    }
-  }
-
-  def getResource: Jedis = {
-    pool.getResource
+    jedis
   }
 
   def returnResource(jedis: Jedis) {

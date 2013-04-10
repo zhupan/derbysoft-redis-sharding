@@ -14,18 +14,9 @@ protected class ShardedJedisClientPool {
   }
 
   def withClient[T](body: ShardedJedis => T) = {
-    var jedis: ShardedJedis = null
+    val jedis = pool.getResource
     try {
-      jedis = pool.getResource
       body(jedis)
-    } catch {
-      case e: Exception => {
-        if (jedis != null) {
-          pool.returnBrokenResource(jedis)
-          jedis = null
-        }
-        throw new RuntimeException(e)
-      }
     } finally {
       if (jedis != null) {
         pool.returnResource(jedis)
@@ -34,7 +25,19 @@ protected class ShardedJedisClientPool {
   }
 
   def getResource: ShardedJedis = {
-    pool.getResource
+    var jedis: ShardedJedis = null
+    try {
+      jedis = pool.getResource
+    } catch {
+      case e: Exception => {
+        if (jedis != null) {
+          pool.returnBrokenResource(jedis)
+          jedis = null
+        }
+        throw new RuntimeException(e)
+      }
+    }
+    jedis
   }
 
   def returnResource(jedis: ShardedJedis) {

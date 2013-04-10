@@ -190,7 +190,7 @@ class HashShardingRedis extends RedisCommands {
       client => {
         shardedJedisPipeline.setShardedJedis(client)
         shardedJedisPipeline.execute()
-        return shardedJedisPipeline.getResults
+        return shardedJedisPipeline.syncAndReturnAll()
       }
     }
   }

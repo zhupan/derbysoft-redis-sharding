@@ -5,7 +5,7 @@ import scala.Predef._
 import redis.clients.jedis._
 import com.derbysoft.redis.clients.RedisCommands
 import scala.{Double, Int, Long}
-import java.lang.{String, Object}
+import java.lang.String
 import redis.clients.util.Slowlog
 import scala.collection.JavaConversions._
 
@@ -153,14 +153,14 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     }
   }
 
-  override def pipelined(shardedJedisPipeline: ShardedJedisPipeline): java.util.List[AnyRef] = {
-    return throw new UnsupportedOperationException;
-  }
-
   def pipelined(jedisPipeline: PipelineBlock): java.util.List[Object] = {
     pool.withClient {
       client => return client.pipelined(jedisPipeline)
     }
+  }
+
+  override def pipelined(shardedJedisPipeline: ShardedJedisPipeline): java.util.List[AnyRef] = {
+    throw new UnsupportedOperationException
   }
 
   def info: String = {
