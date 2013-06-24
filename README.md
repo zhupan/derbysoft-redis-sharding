@@ -67,6 +67,7 @@ If you do not need to sharding, You can use SingleJedis
         redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 
 - 修改Redis Server个数
+
         environment.properties
         redis.hosts.size = 32
 
