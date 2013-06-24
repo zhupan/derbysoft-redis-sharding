@@ -66,6 +66,10 @@ If you do not need to sharding, You can use SingleJedis
         environment.properties
         redis.hosts.file = /usr/local/xxx/redis.hosts.properties
 
+- 修改Redis Server个数
+        environment.properties
+        redis.hosts.size = 32
+
     然后在web.xml文件里面添加一个Listener即可
 
            <listener>
@@ -100,13 +104,6 @@ If you do not need to sharding, You can use SingleJedis
                <servlet-name>RedisMemoryServlet</servlet-name>
                <url-pattern>/redis-memory</url-pattern>
            </servlet-mapping>
-
-- Update Redis Server Count
-
-           <context-param>
-               <param-name>redisHostsSize</param-name>
-               <param-value>32</param-value>
-           </context-param>
 
 - Update RedisPoolConfig
 

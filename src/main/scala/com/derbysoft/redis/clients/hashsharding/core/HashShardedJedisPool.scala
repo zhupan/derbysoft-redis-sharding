@@ -7,10 +7,14 @@ import com.derbysoft.redis.clients.common.config.HostKey
 
 object HashShardedJedisPool {
 
-  val shards = new java.util.ArrayList[JedisShardInfo]
+  private val shards = new java.util.ArrayList[JedisShardInfo]
 
   def apply(): ShardedJedisPool = {
     new ShardedJedisPool(JedisPoolConfigInstance(), shards)
+  }
+
+  def allShards: java.util.List[JedisShardInfo] = {
+    shards.clone().asInstanceOf[java.util.List[JedisShardInfo]]
   }
 
   def initShards() {

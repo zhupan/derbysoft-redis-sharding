@@ -18,11 +18,6 @@
         <param-value>1,2,-1,-1,true,2000</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>redisHostsSize</param-name>
-        <param-value>32</param-value>
-    </context-param>
-
     <servlet>
         <servlet-name>RedisHostsServlet</servlet-name>
         <servlet-class>com.derbysoft.redis.clients.common.servlet.RedisHostsServlet</servlet-class>

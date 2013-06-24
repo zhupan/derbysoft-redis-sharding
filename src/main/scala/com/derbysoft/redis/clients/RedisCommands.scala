@@ -9,6 +9,8 @@ trait RedisCommands extends JedisCommands {
 
   def returnResource(jedisCommands: JedisCommands)
 
+  def returnBrokenResource(jedisCommands: JedisCommands)
+
   def delete(key: String)
 
   def set(key: String, value: String, unixTime: Long)

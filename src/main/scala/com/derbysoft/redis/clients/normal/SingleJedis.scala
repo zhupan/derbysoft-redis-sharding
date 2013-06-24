@@ -21,10 +21,24 @@ class SingleJedis(hostAndPort: String) extends RedisCommands {
     pool.returnResource(jedisCommands.asInstanceOf[Jedis])
   }
 
+  override def returnBrokenResource(jedisCommands: JedisCommands) {
+    pool.returnBrokenResource(jedisCommands.asInstanceOf[Jedis])
+  }
+
   override def get(key: String): String = {
     pool.withClient {
       client => return client.get(key)
     }
+  }
+
+  def get(keyList: java.util.List[String]): java.util.List[Object] = {
+    pipelined(new PipelineBlock {
+      def execute() {
+        keyList.foreach(key => {
+          this.get(key)
+        })
+      }
+    })
   }
 
   override def set(key: String, value: String): String = {

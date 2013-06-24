@@ -44,4 +44,8 @@ protected class ShardedJedisClientPool {
     pool.returnResource(jedis)
   }
 
+  def returnBrokenResource(jedis: ShardedJedis) {
+    pool.returnBrokenResource(jedis)
+  }
+
 }

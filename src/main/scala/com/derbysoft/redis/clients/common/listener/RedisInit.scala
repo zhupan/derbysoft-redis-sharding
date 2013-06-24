@@ -6,17 +6,25 @@ import javax.servlet.ServletContextEvent
 import com.derbysoft.redis.clients.normal.JedisPoolConfig
 import com.derbysoft.redis.clients.common.config.HostKey
 import com.derbysoft.redis.clients.hashsharding.core.ShardedJedisClientPool
+import org.apache.commons.logging.LogFactory
 
 protected object RedisInit {
 
+  private val redisHostsSize = "redis.hosts.size"
+
+  private val redisHostsFile = "redis.hosts.file"
+
+  private val logger = LogFactory.getLog(this.getClass)
+
   def apply(event: ServletContextEvent) {
-    redisHostsSizeInit(event)
     var environment = "environment"
     val redisHostsConfig = event.getServletContext.getInitParameter("redisHostsConfig")
     if (redisHostsConfig != null && !redisHostsConfig.isEmpty) {
       environment = redisHostsConfig.replaceAll(".properties", "")
     }
-    val redisHostsFile = ResourceBundle.getBundle(environment).getString("redis.hosts.file")
+    val environmentProperties = ResourceBundle.getBundle(environment)
+    redisHostsSizeInit(environmentProperties)
+    val redisHostsFile = environmentProperties.getString(RedisInit.redisHostsFile)
     if (redisHostsFile != null) {
       ShardingRedis.init(redisHostsFile)
     }
@@ -42,10 +50,16 @@ protected object RedisInit {
     }
   }
 
-  def redisHostsSizeInit(event: ServletContextEvent) {
-    val redisHostsSize = event.getServletContext.getInitParameter("redisHostsSize")
-    if (redisHostsSize != null && !redisHostsSize.isEmpty) {
-      HostKey.init(Integer.valueOf(redisHostsSize.trim))
+  def redisHostsSizeInit(environment: ResourceBundle) {
+    try {
+      val redisHostsSize = environment.getString(RedisInit.redisHostsSize)
+      if (redisHostsSize != null && !redisHostsSize.isEmpty) {
+        HostKey.init(Integer.valueOf(redisHostsSize.trim))
+      }
+    } catch {
+      case e: Exception => {
+        logger.info(e.getMessage, e)
+      }
     }
   }
 }

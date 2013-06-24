@@ -9,7 +9,7 @@ import math.BigDecimal.RoundingMode
 
 class RedisMemoryServlet extends HttpServlet {
 
-  val kilo = 1024d
+  private val kilo = 1024d
 
   //(bit).Byte (B).KiloByte (KB).MegaByte (MB).GigaByte (GB).TeraByte (TB).PetaByte (PB).ExaByte (EB).ZetaByte (ZB).YottaByte (YB).NonaByte (NB).DoggaByte (DB)
   var units = List("B", "K", "M", "G", "T", "P", "E", "Z", "Y", "N", "D")
@@ -60,12 +60,16 @@ class RedisMemoryServlet extends HttpServlet {
 
   def printAllHosts(response: HttpServletResponse, request: HttpServletRequest, h: (String, String)) {
     val host = h._2
-    val memory = RedisInfoUtil.getUsedMemoryHuman(getJedis(host).info())
-    response.getOutputStream().println("<div>")
-    response.getOutputStream().println(host + " ")
-    response.getOutputStream().println("<a href=\"" + request.getRequestURI + "?host=" + host + "\">" + memory + "</a>")
-    response.getOutputStream().println("<br />")
-    response.getOutputStream().println("</div>")
+    val jedis = getJedis(host)
+    if (jedis == null) {
+      throw new IllegalStateException("host[" + host + "] is null.")
+    }
+    val memory = RedisInfoUtil.getUsedMemoryHuman(jedis.info())
+    response.getOutputStream.println("<div>")
+    response.getOutputStream.println(host + " ")
+    response.getOutputStream.println("<a href=\"" + request.getRequestURI + "?host=" + host + "\">" + memory + "</a>")
+    response.getOutputStream.println("<br />")
+    response.getOutputStream.println("</div>")
   }
 
   override def doPost(request: HttpServletRequest, response: HttpServletResponse) {

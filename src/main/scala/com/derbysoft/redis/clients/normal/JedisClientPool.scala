@@ -5,7 +5,7 @@ import redis.clients.jedis.{BinaryJedis, Jedis}
 
 class JedisClientPool(hostAndPortValue: String) {
 
-  val pool = JedisPoolInstance(hostAndPortValue)
+  private val pool = JedisPoolInstance(hostAndPortValue)
 
   def withClient[T](body: Jedis => T) = {
     val jedis = pool.getResource
@@ -38,5 +38,8 @@ class JedisClientPool(hostAndPortValue: String) {
     pool.returnResource(jedis.asInstanceOf[BinaryJedis])
   }
 
+  def returnBrokenResource(jedis: Jedis) {
+    pool.returnBrokenResource(jedis.asInstanceOf[BinaryJedis])
+  }
 
 }

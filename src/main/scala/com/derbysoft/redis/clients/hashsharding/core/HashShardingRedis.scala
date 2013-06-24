@@ -17,6 +17,10 @@ class HashShardingRedis extends RedisCommands {
     ShardedJedisClientPool.returnResource(jedisCommands.asInstanceOf[ShardedJedis])
   }
 
+  override def returnBrokenResource(jedisCommands: JedisCommands) {
+    ShardedJedisClientPool.returnBrokenResource(jedisCommands.asInstanceOf[ShardedJedis])
+  }
+
   override def get(key: String): String = {
     ShardedJedisClientPool.withClient {
       client => return client.get(key)
