@@ -35,7 +35,7 @@ use it as a maven dependency
     <dependency>
         <groupId>com.derbysoft.redis</groupId>
         <artifactId>derbysoft-redis-sharding</artifactId>
-        <version>1.3</version>
+        <version>1.6</version>
         <type>jar</type>
         <scope>compile</scope>
     </dependency>
