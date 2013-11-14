@@ -110,7 +110,7 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  def del(key: String): Long = {
+  override def del(key: String): java.lang.Long = {
     ShardedJedisClientPool.withClient {
       client => return client.del(key)
     }
@@ -619,21 +619,57 @@ class HashShardingRedis extends RedisCommands {
     }
   }
 
-  override def `type`(key: String): String = {
+  override def `type`(key: String): java.lang.String = {
     ShardedJedisClientPool.withClient {
       client => return client.`type`(key)
     }
   }
 
-  override def lpushx(key: String, string: String): java.lang.Long = {
+  override def lpushx(key: String, strings: String*): java.lang.Long = {
     ShardedJedisClientPool.withClient {
-      client => return client.lpushx(key, string)
+      client => return client.lpushx(key, strings: _*)
     }
   }
 
-  override def rpushx(key: String, string: String): java.lang.Long = {
+  override def rpushx(key: String, strings: String*): java.lang.Long = {
     ShardedJedisClientPool.withClient {
-      client => return client.rpushx(key, string)
+      client => return client.rpushx(key, strings: _*)
+    }
+  }
+
+  override def bitcount(key: String): java.lang.Long = {
+    ShardedJedisClientPool.withClient {
+      client => return client.bitcount(key)
+    }
+  }
+
+  override def bitcount(key: String, start: Long, end: Long): java.lang.Long = {
+    ShardedJedisClientPool.withClient {
+      client => return client.bitcount(key, start, end)
+    }
+  }
+
+  override def move(key: String, dbIndex: Int): java.lang.Long = {
+    ShardedJedisClientPool.withClient {
+      client => return client.move(key, dbIndex)
+    }
+  }
+
+  override def echo(string: String): java.lang.String = {
+    ShardedJedisClientPool.withClient {
+      client => return client.echo(string)
+    }
+  }
+
+  override def blpop(arg: String): java.util.List[String] = {
+    ShardedJedisClientPool.withClient {
+      client => return client.blpop(arg)
+    }
+  }
+
+  override def brpop(arg: String): java.util.List[String] = {
+    ShardedJedisClientPool.withClient {
+      client => return client.brpop(arg)
     }
   }
 
@@ -642,4 +678,23 @@ class HashShardingRedis extends RedisCommands {
       client => return client.zremrangeByScore(key, start, end)
     }
   }
+
+  override def strlen(key: String): java.lang.Long = {
+    ShardedJedisClientPool.withClient {
+      client => return client.strlen(key)
+    }
+  }
+
+  override def setbit(key: String, offset: Long, value: String): java.lang.Boolean = {
+    ShardedJedisClientPool.withClient {
+      client => return client.setbit(key, offset, value)
+    }
+  }
+
+  override def persist(key: String): java.lang.Long = {
+    ShardedJedisClientPool.withClient {
+      client => return client.persist(key)
+    }
+  }
+
 }

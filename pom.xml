@@ -6,7 +6,7 @@
     <groupId>com.derbysoft.redis</groupId>
     <artifactId>derbysoft-redis-sharding</artifactId>
     <name>derbysoft-redis-sharding</name>
-    <version>1.6</version>
+    <version>1.7</version>
     <packaging>jar</packaging>
     <profiles>
         <profile>
@@ -116,7 +116,7 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
