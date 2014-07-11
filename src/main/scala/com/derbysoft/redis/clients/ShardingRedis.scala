@@ -5,10 +5,13 @@ import common.config.HostsPropertiesValidate
 import hashsharding.core.{ShardedJedisClientPool, HashShardingRedis}
 import scala.collection.JavaConversions._
 import org.apache.commons.logging.LogFactory
+import scala.collection.mutable
 
 object ShardingRedis {
 
-  val hostsMap: scala.collection.mutable.Map[String, String] = scala.collection.mutable.Map[String, String]()
+  var hostsMap: scala.collection.mutable.Map[String, String] = new mutable.HashMap[String, String] {
+    seedvalue = 0
+  }
 
   val single = new HashShardingRedis
 
@@ -34,10 +37,9 @@ object ShardingRedis {
       RichFile.writeStringToFile(hosts, hostsFile)
       ShardedJedisClientPool.rePool()
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         logger.error(e.getMessage, e)
         return e.getMessage
-      }
     }
     hosts
   }

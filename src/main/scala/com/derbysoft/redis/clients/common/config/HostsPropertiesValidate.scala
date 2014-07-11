@@ -7,18 +7,18 @@ object HostsPropertiesValidate {
 
   def apply(hostMap: java.util.Map[String, String]) {
     val error = "Error: "
-    if (hostMap.size != HostKey.redisHostsSize) {
+    if (hostMap.size != Hosts.redisHostsSize) {
       throw new Error(error + "Host size[" + hostMap.size + "] is illegal.")
     }
     hostMap.foreach((m: (String, String)) => {
-      if (!m._1.startsWith(HostKey.hostPrefix)) {
+      if (!m._1.startsWith(Hosts.hostPrefix)) {
         throw new Error(error + "Host prefix[" + m._1 + "] is illegal.")
       }
-      if (m._1.length != HostKey.hostPrefix.length + 3) {
+      if (m._1.length != Hosts.hostPrefix.length + 3) {
         throw new Error(error + "Host key[" + m._1 + "] is illegal.")
       }
-      val hostNumber = m._1.substring(HostKey.hostPrefix.length).toInt
-      if (0 > hostNumber || hostNumber > HostKey.redisHostsSize - 1) {
+      val hostNumber = m._1.substring(Hosts.hostPrefix.length).toInt
+      if (0 > hostNumber || hostNumber > Hosts.redisHostsSize - 1) {
         throw new Error(error + "Host key[" + m._1 + "] is illegal.")
       }
       val hostAndPort = m._2.split(":")

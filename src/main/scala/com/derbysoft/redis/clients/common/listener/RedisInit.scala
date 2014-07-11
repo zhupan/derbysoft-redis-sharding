@@ -4,15 +4,17 @@ import com.derbysoft.redis.clients.ShardingRedis
 import java.util.ResourceBundle
 import javax.servlet.ServletContextEvent
 import com.derbysoft.redis.clients.normal.JedisPoolConfig
-import com.derbysoft.redis.clients.common.config.HostKey
+import com.derbysoft.redis.clients.common.config.Hosts
 import com.derbysoft.redis.clients.hashsharding.core.ShardedJedisClientPool
 import org.apache.commons.logging.LogFactory
 
-protected object RedisInit {
+object RedisInit {
 
-  private val redisHostsSize = "redis.hosts.size"
+  private val redisHostsSizeKey = "redis.hosts.size"
 
-  private val redisHostsFile = "redis.hosts.file"
+  private val redisHostsFileKey = "redis.hosts.file"
+
+  private val redisHostsSortKey = "redis.hosts.sort"
 
   private val logger = LogFactory.getLog(this.getClass)
 
@@ -23,8 +25,8 @@ protected object RedisInit {
       environment = redisHostsConfig.replaceAll(".properties", "")
     }
     val environmentProperties = ResourceBundle.getBundle(environment)
-    redisHostsSizeInit(environmentProperties)
-    val redisHostsFile = environmentProperties.getString(RedisInit.redisHostsFile)
+    redisHostsInit(environmentProperties)
+    val redisHostsFile = environmentProperties.getString(redisHostsFileKey)
     if (redisHostsFile != null) {
       ShardingRedis.init(redisHostsFile)
     }
@@ -32,7 +34,15 @@ protected object RedisInit {
   }
 
 
-  def redisPoolConfigInit(event: ServletContextEvent) {
+  private def getHostsSort(environment: ResourceBundle): Boolean = {
+    val redisHostsSort = environment.getString(redisHostsSortKey)
+    if (redisHostsSort == null) {
+      return false
+    }
+    redisHostsSort.toBoolean
+  }
+
+  private def redisPoolConfigInit(event: ServletContextEvent) {
     val redisPoolConfig = event.getServletContext.getInitParameter("redisPoolConfig")
     if (redisPoolConfig != null && !redisPoolConfig.isEmpty) {
       val redisPoolConfigs = redisPoolConfig.split(",")
@@ -50,16 +60,15 @@ protected object RedisInit {
     }
   }
 
-  def redisHostsSizeInit(environment: ResourceBundle) {
+  private def redisHostsInit(environment: ResourceBundle) {
     try {
-      val redisHostsSize = environment.getString(RedisInit.redisHostsSize)
+      val redisHostsSize = environment.getString(redisHostsSizeKey)
       if (redisHostsSize != null && !redisHostsSize.isEmpty) {
-        HostKey.init(Integer.valueOf(redisHostsSize.trim))
+        Hosts.initHostsSize(Integer.valueOf(redisHostsSize.trim))
       }
+      Hosts.initHostsSort(getHostsSort(environment))
     } catch {
-      case e: Exception => {
-        logger.info(e.getMessage, e)
-      }
+      case e: Exception => logger.info(e.getMessage, e)
     }
   }
 }

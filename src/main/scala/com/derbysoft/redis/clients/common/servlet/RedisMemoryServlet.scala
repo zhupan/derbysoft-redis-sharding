@@ -3,7 +3,7 @@ package com.derbysoft.redis.clients.common.servlet
 import javax.servlet.http.{HttpServletRequest, HttpServlet, HttpServletResponse}
 import com.derbysoft.redis.clients.ShardingRedis
 import redis.clients.jedis.{Jedis, ShardedJedis}
-import com.derbysoft.redis.util.RedisInfoUtil
+import com.derbysoft.redis.util.{MapToTreeMap, RedisInfoUtil}
 import scala.BigDecimal
 import math.BigDecimal.RoundingMode
 
@@ -20,8 +20,8 @@ class RedisMemoryServlet extends HttpServlet {
     val host = request.getParameter("host")
     if (host != null && !host.equals("")) {
       val jedis = getJedis(host)
-      response.getOutputStream().println("host:" + getHost(jedis))
-      response.getOutputStream().println(jedis.info())
+      response.getOutputStream.println("host:" + getHost(jedis))
+      response.getOutputStream.println(jedis.info())
       return
     }
     var totalMemory: Double = ShardingRedis.single.usedMemory()
@@ -30,18 +30,18 @@ class RedisMemoryServlet extends HttpServlet {
       index += 1
       totalMemory /= kilo
     }
-    response.getOutputStream().println("<div>Total Used Memory: " + BigDecimal.valueOf(totalMemory).setScale(3, RoundingMode.HALF_UP) + units(index) + "</div>")
-    ShardingRedis.hostsMap.foreach((h: (String, String)) => {
+    response.getOutputStream.println("<div>Total Used Memory: " + BigDecimal.valueOf(totalMemory).setScale(3, RoundingMode.HALF_UP) + units(index) + "</div>")
+    MapToTreeMap(ShardingRedis.hostsMap).foreach((h: (String, String)) => {
       printAllHosts(response, request, h)
     })
   }
 
 
-  def getHost(jedis: Jedis): String = {
+  private def getHost(jedis: Jedis): String = {
     jedis.getClient.getHost + ":" + jedis.getClient.getPort
   }
 
-  def getJedis(host: String): Jedis = {
+  private def getJedis(host: String): Jedis = {
     val shardedJedis = ShardingRedis.single.getResource.asInstanceOf[ShardedJedis]
     try {
       val iterator = shardedJedis.getAllShards.iterator()
@@ -58,7 +58,7 @@ class RedisMemoryServlet extends HttpServlet {
     null
   }
 
-  def printAllHosts(response: HttpServletResponse, request: HttpServletRequest, h: (String, String)) {
+  private def printAllHosts(response: HttpServletResponse, request: HttpServletRequest, h: (String, String)) {
     val host = h._2
     val jedis = getJedis(host)
     if (jedis == null) {
