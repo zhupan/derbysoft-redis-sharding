@@ -21,26 +21,32 @@ object HashShardedJedisPool {
 
   def initShards() {
     shards.clear()
-    val hosts = getHosts()
-    println("shards size:" + hosts.size)
-    hosts.foreach(h => shards.add(JedisShardInfoInstance(h)))
+    getHosts().foreach(host => shards.add(JedisShardInfoInstance(host)))
     if (shards.size() != Hosts.redisHostsSize) {
       throw new IllegalArgumentException("Redis hosts size[" + shards.size + "] is illegal.")
     }
   }
 
-  def getHosts(): util.Collection[String] = {
+  private def getHosts(): util.Collection[String] = {
     val hosts = getCollection
     val keys = getCollection
     ShardingRedis.hostsMap.foreach((h: (String, String)) => {
       hosts.add(h._2)
       keys.add(h._1)
     })
-    keys.foreach(k => println(k))
+    printInfo(keys.toArray, hosts.toArray)
     hosts
   }
 
-  def getCollection: util.Collection[String] = {
+
+  private def printInfo(keys: Array[AnyRef], hosts: Array[AnyRef]) {
+    println("shards size:" + hosts.size)
+    (0 until keys.size).foreach(i => {
+      println(keys(i) + "=" + hosts(i))
+    })
+  }
+
+  private def getCollection: util.Collection[String] = {
     if (Hosts.redisHostsSort) {
       return new util.TreeSet()
     }
