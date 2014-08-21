@@ -1,6 +1,5 @@
 package com.derbysoft.redis.clients.hashsharding.core
 
-import java.util.List
 import java.util.regex.Pattern
 import scala.collection.JavaConversions._
 
@@ -12,19 +11,18 @@ import redis.clients.jedis.{ShardedJedis, JedisShardInfo}
 import org.apache.commons.pool.{PoolableObjectFactory, BasePoolableObjectFactory}
 import java.util.concurrent.Callable
 import com.derbysoft.redis.util.ExecutorUtils
-import org.apache.commons.logging.LogFactory
 
 class ShardedJedisPool(poolConfig: GenericObjectPool.Config, factory: PoolableObjectFactory[JedisShardInfo]) extends Pool[ShardedJedis](poolConfig, factory) {
 
-  def this(poolConfig: GenericObjectPool.Config, shards: List[JedisShardInfo]) {
+  def this(poolConfig: GenericObjectPool.Config, shards: java.util.List[JedisShardInfo]) {
     this(poolConfig, new ShardedJedisFactory[JedisShardInfo](shards, Hashing.MURMUR_HASH, null))
   }
 
-  def this(poolConfig: GenericObjectPool.Config, shards: List[JedisShardInfo], algo: Hashing) {
+  def this(poolConfig: GenericObjectPool.Config, shards: java.util.List[JedisShardInfo], algo: Hashing) {
     this(poolConfig, new ShardedJedisFactory[JedisShardInfo](shards, algo, null))
   }
 
-  def this(poolConfig: GenericObjectPool.Config, shards: List[JedisShardInfo], algo: Hashing, keyTagPattern: Pattern) {
+  def this(poolConfig: GenericObjectPool.Config, shards: java.util.List[JedisShardInfo], algo: Hashing, keyTagPattern: Pattern) {
     this(poolConfig, new ShardedJedisFactory[JedisShardInfo](shards, algo, keyTagPattern))
   }
 }
@@ -32,9 +30,7 @@ class ShardedJedisPool(poolConfig: GenericObjectPool.Config, factory: PoolableOb
 /**
  * PoolableObjectFactory custom impl.
  */
-private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing, keyTagPattern: Pattern) extends BasePoolableObjectFactory[T] {
-
-  private val logger = LogFactory.getLog(this.getClass)
+private class ShardedJedisFactory[T](shards: java.util.List[JedisShardInfo], algo: Hashing, keyTagPattern: Pattern) extends BasePoolableObjectFactory[T] {
 
   override def makeObject(): T = {
     new ShardedJedis(shards, algo, keyTagPattern).asInstanceOf[T]
@@ -52,15 +48,11 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
                 try {
                   jedis.quit()
                 } catch {
-                  case e: Exception => {
-                    logger.warn(e.getMessage, e)
-                  }
+                  case e: Exception => println(e.getMessage, e)
                 }
                 jedis.disconnect()
               } catch {
-                case e: Exception => {
-                  logger.warn(e.getMessage, e)
-                }
+                case e: Exception => println(e.getMessage, e)
               }
             }
           })
@@ -69,7 +61,7 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
       }
     } catch {
       case e: Exception => {
-        logger.warn(e.getMessage, e)
+        println(e.getMessage, e)
         retryDestroyObject(obj)
       }
     }
@@ -83,15 +75,11 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
           try {
             jedis.quit()
           } catch {
-            case e: Exception => {
-              logger.error(e.getMessage, e)
-            }
+            case e: Exception => println(e.getMessage, e)
           }
           jedis.disconnect()
         } catch {
-          case e: Exception => {
-            logger.error(e.getMessage, e)
-          }
+          case e: Exception => println(e.getMessage, e)
         }
       }
     }
@@ -110,10 +98,9 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
       }
       !ExecutorUtils.batchExecute(list).contains(false)
     } catch {
-      case e: Exception => {
-        logger.warn(e.getMessage, e)
+      case e: Exception =>
+        println(e.getMessage, e)
         retryValidateObject(obj)
-      }
     }
   }
 
@@ -127,10 +114,9 @@ private class ShardedJedisFactory[T](shards: List[JedisShardInfo], algo: Hashing
       }
       true
     } catch {
-      case e: Exception => {
-        logger.error(e.getMessage, e)
+      case e: Exception =>
+        println(e.getMessage, e)
         false
-      }
     }
   }
 

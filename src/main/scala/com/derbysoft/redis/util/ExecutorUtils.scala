@@ -1,17 +1,13 @@
 package com.derbysoft.redis.util
 
-import java.util.{ArrayList, Collection, List}
 import java.util.concurrent._
 import scala.collection.JavaConversions._
 import com.derbysoft.redis.clients.common.config.Hosts
-import org.apache.commons.logging.LogFactory
 import java.util
 
 object ExecutorUtils {
 
   var executor: Executor = new ThreadPoolExecutor(Hosts.redisHostsSize * 2, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable]())
-
-  private val logger = LogFactory.getLog(this.getClass)
 
   def setExecutor(executor: Executor) {
     this.executor = executor
@@ -28,15 +24,13 @@ object ExecutorUtils {
       try {
         results.add(future.get())
       } catch {
-        case e: Exception => {
-          logger.warn(e.getMessage, e)
+        case e: Exception =>
+          println(e.getMessage, e)
           throw new RuntimeException(e)
-        }
       }
     }
     results
   }
-
 
   private def submitTasks[T](executor: Executor, tasks: util.Collection[Callable[T]]): util.List[Future[T]] = {
     val service = new ExecutorCompletionService[T](executor)

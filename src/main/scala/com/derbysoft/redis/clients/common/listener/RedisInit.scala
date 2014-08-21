@@ -6,7 +6,6 @@ import javax.servlet.ServletContextEvent
 import com.derbysoft.redis.clients.normal.JedisPoolConfig
 import com.derbysoft.redis.clients.common.config.Hosts
 import com.derbysoft.redis.clients.hashsharding.core.ShardedJedisClientPool
-import org.apache.commons.logging.LogFactory
 
 object RedisInit {
 
@@ -15,8 +14,6 @@ object RedisInit {
   private val redisHostsFileKey = "redis.hosts.file"
 
   private val redisHostsSortKey = "redis.hosts.sort"
-
-  private val logger = LogFactory.getLog(this.getClass)
 
   def apply(event: ServletContextEvent) {
     var environment = "environment"
@@ -35,11 +32,16 @@ object RedisInit {
 
 
   private def getHostsSort(environment: ResourceBundle): Boolean = {
-    val redisHostsSort = environment.getString(redisHostsSortKey)
-    if (redisHostsSort == null) {
-      return false
+    try {
+      val redisHostsSort = environment.getString(redisHostsSortKey)
+      if (redisHostsSort == null) {
+        return false
+      }
+      redisHostsSort.toBoolean
+    } catch {
+      case e: Exception => return false
     }
-    redisHostsSort.toBoolean
+
   }
 
   private def redisPoolConfigInit(event: ServletContextEvent) {
@@ -49,12 +51,12 @@ object RedisInit {
       if (redisPoolConfigs.size != 6) {
         throw new IllegalArgumentException("redisPoolConfig[" + redisPoolConfig + "] is illegal. Tt's shoud be:minIdle,maxIdle,maxActive,maxWait,timeout")
       }
-      val minIdle = Integer.valueOf(redisPoolConfigs(0))
-      val maxIdle = Integer.valueOf(redisPoolConfigs(1))
-      val maxActive = Integer.valueOf(redisPoolConfigs(2))
-      val maxWait = java.lang.Long.valueOf(redisPoolConfigs(3))
-      val testOnBorrow = java.lang.Boolean.valueOf(redisPoolConfigs(4))
-      val timeout = Integer.valueOf(redisPoolConfigs(5))
+      val minIdle = redisPoolConfigs(0).toInt
+      val maxIdle = redisPoolConfigs(1).toInt
+      val maxActive = redisPoolConfigs(2).toInt
+      val maxWait = redisPoolConfigs(3).toLong
+      val testOnBorrow = redisPoolConfigs(4).toBoolean
+      val timeout = redisPoolConfigs(5).toInt
       JedisPoolConfig.init(minIdle, maxIdle, maxActive, maxWait, testOnBorrow, timeout)
       ShardedJedisClientPool.rePool()
     }
@@ -64,11 +66,11 @@ object RedisInit {
     try {
       val redisHostsSize = environment.getString(redisHostsSizeKey)
       if (redisHostsSize != null && !redisHostsSize.isEmpty) {
-        Hosts.initHostsSize(Integer.valueOf(redisHostsSize.trim))
+        Hosts.initHostsSize(redisHostsSize.trim.toInt)
       }
       Hosts.initHostsSort(getHostsSort(environment))
     } catch {
-      case e: Exception => logger.info(e.getMessage, e)
+      case e: Exception => println(e.getMessage, e)
     }
   }
 }

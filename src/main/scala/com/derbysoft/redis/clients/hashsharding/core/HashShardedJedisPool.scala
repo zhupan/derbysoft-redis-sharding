@@ -28,7 +28,7 @@ object HashShardedJedisPool {
   }
 
   private def getHosts(): util.Collection[String] = {
-    val hosts = getCollection
+    val hosts = new util.ArrayList[String]()
     val keys = getCollection
     ShardingRedis.hostsMap.foreach((h: (String, String)) => {
       hosts.add(h._2)
@@ -37,7 +37,6 @@ object HashShardedJedisPool {
     printInfo(keys.toArray, hosts.toArray)
     hosts
   }
-
 
   private def printInfo(keys: Array[AnyRef], hosts: Array[AnyRef]) {
     println("shards size:" + hosts.size)
@@ -48,9 +47,9 @@ object HashShardedJedisPool {
 
   private def getCollection: util.Collection[String] = {
     if (Hosts.redisHostsSort) {
-      return new util.TreeSet()
+      return new util.TreeSet[String]()
     }
-    new util.ArrayList()
+    new util.ArrayList[String]()
   }
 
 }
