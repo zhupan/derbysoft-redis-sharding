@@ -1,10 +1,11 @@
 package com.derbysoft.redis.clients
 
-import com.derbysoft.redis.util.{RichFile, MapToProperties, PropertiesToMap}
+import com.derbysoft.redis.util.{MapToProperties, PropertiesToMap}
 import common.config.HostsPropertiesValidate
 import hashsharding.core.{ShardedJedisClientPool, HashShardingRedis}
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+import java.util.ResourceBundle
 
 object ShardingRedis {
 
@@ -14,24 +15,18 @@ object ShardingRedis {
 
   val single = new HashShardingRedis
 
-  private var hostsFile = ""
-
-  def init(hostsFile: String): String = {
-    this.hostsFile = hostsFile
-    updateHosts(PropertiesToMap(hostsFile))
+  def init(config: ResourceBundle): String = {
+    updateHosts(PropertiesToMap(config))
     hosts
   }
 
   def hosts: String = MapToProperties(hostsMap.toMap[String, String])
-
-  def updateHosts(hostsProperties: String): String = updateHosts(PropertiesToMap.stringToMap(hostsProperties))
 
   private def updateHosts(map: Map[String, String]): String = {
     try {
       HostsPropertiesValidate(map)
       hostsMap.clear()
       hostsMap.++=(map.toList)
-      RichFile.writeStringToFile(hosts, hostsFile)
       ShardedJedisClientPool.rePool()
     } catch {
       case e: Exception =>

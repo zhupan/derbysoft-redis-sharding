@@ -1,31 +1,20 @@
 package com.derbysoft.redis.util
 
-import java.util.Properties
-import java.io.{StringReader, FileInputStream}
+import java.util.ResourceBundle
+import com.derbysoft.redis.clients.common.listener.RedisInit
 
 object PropertiesToMap {
 
-  def apply(fileName: String): Map[String, String] = {
-    val properties = new Properties()
-    properties.load(new FileInputStream(fileName))
-    propertiesToMap(properties)
-  }
-
-  def stringToMap(value: String): Map[String, String] = {
-    val properties = new Properties()
-    properties.load(new StringReader(value))
-    propertiesToMap(properties)
-  }
-
-  private def propertiesToMap(properties: Properties): Map[String, String] = {
+  def apply(properties: ResourceBundle): Map[String, String] = {
     val map = scala.collection.mutable.Map.empty[String, String]
-    val keys = properties.keys()
+    val keys = properties.getKeys
     while (keys.hasMoreElements) {
       val key = keys.nextElement()
-      map.put(key.toString, properties.get(key).toString)
+      if (!key.contains(RedisInit.redisHostsSizeKey) && !key.contains(RedisInit.redisHostsSortKey)) {
+        map.put(key.toString, properties.getString(key))
+      }
     }
     map.toMap[String, String]
   }
-
 
 }

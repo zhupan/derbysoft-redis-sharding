@@ -8,8 +8,8 @@
     </listener>
 
     <context-param>
-        <param-name>redisHostsConfig</param-name>
-        <param-value>environment</param-value>
+        <param-name>redisConfigName</param-name>
+        <param-value>redis-sharding-config</param-value>
     </context-param>
 
     <context-param>
