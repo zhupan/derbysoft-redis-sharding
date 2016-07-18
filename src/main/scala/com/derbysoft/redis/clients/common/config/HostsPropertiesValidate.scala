@@ -22,7 +22,7 @@ object HostsPropertiesValidate {
         throw new Error(error + "Host key[" + m._1 + "] is illegal.")
       }
       val hostAndPort = m._2.split(":")
-      val ipPattern = Pattern.compile("^([1-9]|[1-9]\\d|1\\d{2}|2[0-1]\\d|22[0-3])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}$")
+      val ipPattern = Pattern.compile("[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+.?")
       if (!ipPattern.matcher(hostAndPort(0)).matches() && !"localhost".equals(hostAndPort(0))) {
         throw new Error(error + "Host[" + m._2 + "] is illegal.")
       }

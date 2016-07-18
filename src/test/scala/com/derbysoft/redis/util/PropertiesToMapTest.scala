@@ -1,9 +1,10 @@
 package com.derbysoft.redis.util
 
-import junit.framework.{TestCase, TestSuite, Test}
-import org.junit.Assert
-import java.util.ResourceBundle
+import java.util.Properties
+
 import com.derbysoft.redis.clients.common.listener.RedisInit
+import junit.framework.{Test, TestCase, TestSuite}
+import org.junit.Assert
 
 object PropertiesToMapTest {
   def suite: Test = {
@@ -19,7 +20,10 @@ object PropertiesToMapTest {
 class PropertiesToMapTest extends TestCase("app") {
 
   def test() {
-    val map = PropertiesToMap(ResourceBundle.getBundle(RedisInit.redisConfigName))
+    val properties = new Properties()
+    val inputStream = this.getClass.getClassLoader.getResourceAsStream(RedisInit.redisConfigName)
+    properties.load(inputStream)
+    val map = PropertiesToMap(properties)
     println(map)
     Assert.assertTrue(map.size == 32)
   }

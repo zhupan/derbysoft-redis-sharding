@@ -1,11 +1,13 @@
 package com.derbysoft.redis.clients
 
+import java.util.Properties
+
+import com.derbysoft.redis.clients.common.config.HostsPropertiesValidate
+import com.derbysoft.redis.clients.hashsharding.core.{HashShardingRedis, ShardedJedisClientPool}
 import com.derbysoft.redis.util.{MapToProperties, PropertiesToMap}
-import common.config.HostsPropertiesValidate
-import hashsharding.core.{ShardedJedisClientPool, HashShardingRedis}
+
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import java.util.ResourceBundle
 
 object ShardingRedis {
 
@@ -15,8 +17,8 @@ object ShardingRedis {
 
   val single = new HashShardingRedis
 
-  def init(config: ResourceBundle): String = {
-    updateHosts(PropertiesToMap(config))
+  def init(properties: Properties): String = {
+    updateHosts(PropertiesToMap(properties))
     hosts
   }
 

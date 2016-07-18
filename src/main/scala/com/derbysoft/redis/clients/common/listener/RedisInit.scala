@@ -1,15 +1,16 @@
 package com.derbysoft.redis.clients.common.listener
 
-import com.derbysoft.redis.clients.ShardingRedis
-import java.util.ResourceBundle
+import java.util.Properties
 import javax.servlet.ServletContextEvent
-import com.derbysoft.redis.clients.normal.JedisPoolConfig
+
+import com.derbysoft.redis.clients.ShardingRedis
 import com.derbysoft.redis.clients.common.config.Hosts
 import com.derbysoft.redis.clients.hashsharding.core.ShardedJedisClientPool
+import com.derbysoft.redis.clients.normal.JedisPoolConfig
 
 object RedisInit {
 
-  val redisConfigName = "redis-sharding-config"
+  val redisConfigName = "redis-sharding-config.properties"
 
   val redisHostsSizeKey = "redis.hosts.size"
 
@@ -19,24 +20,30 @@ object RedisInit {
     var configName = redisConfigName
     val redisHostsConfig = event.getServletContext.getInitParameter("redisConfigName")
     if (redisHostsConfig != null && !redisHostsConfig.isEmpty) {
-      configName = redisHostsConfig.replaceAll(".properties", "")
+      configName = redisHostsConfig
     }
-    val configProperties = ResourceBundle.getBundle(configName)
-    redisConfigInit(configProperties)
-    ShardingRedis.init(configProperties)
+    val properties = new Properties()
+    val inputStream = this.getClass.getClassLoader.getResourceAsStream(configName)
+    properties.load(inputStream)
+    Init(properties)
     redisPoolConfigInit(event)
   }
 
 
-  private def getHostsSort(config: ResourceBundle): Boolean = {
+  def Init(properties: Properties): String = {
+    redisConfigInit(properties)
+    ShardingRedis.init(properties)
+  }
+
+  private def getHostsSort(properties: Properties): Boolean = {
     try {
-      val redisHostsSort = config.getString(redisHostsSortKey)
+      val redisHostsSort = properties.get(redisHostsSortKey)
       if (redisHostsSort == null) {
         return true
       }
-      redisHostsSort.toBoolean
+      redisHostsSort.toString.toBoolean
     } catch {
-      case e: Exception => return true
+      case e: Exception => true
     }
 
   }
@@ -59,13 +66,16 @@ object RedisInit {
     }
   }
 
-  private def redisConfigInit(config: ResourceBundle) {
+  private def redisConfigInit(properties: Properties) {
     try {
-      val redisHostsSize = config.getString(redisHostsSizeKey)
-      if (redisHostsSize != null && !redisHostsSize.isEmpty) {
-        Hosts.initHostsSize(redisHostsSize.trim.toInt)
+      val redisHostsSize = properties.get(redisHostsSizeKey)
+      if (redisHostsSize != null) {
+        val v = redisHostsSize.toString.trim
+        if (!v.isEmpty) {
+          Hosts.initHostsSize(v.toInt)
+        }
       }
-      Hosts.initHostsSort(getHostsSort(config))
+      Hosts.initHostsSort(getHostsSort(properties))
     } catch {
       case e: Exception => println(e.getMessage, e)
     }
